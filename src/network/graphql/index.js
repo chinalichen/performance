@@ -21,7 +21,8 @@ export function getBookQuery(workbookID) {
           sheetID, bookID, columnsIDs, filter, settings,
           userRoles{...ur},
           publish{...pb},
-          metadata{...rm}
+          metadata{...rm},
+          rows{id, timestamp}
         },
         subscribeRows,
         publish{...pb},

@@ -1,4 +1,4 @@
-import { generateID } from "../utils.js/id";
+import { generateID } from "../utils/id";
 
 const WSFrameTypes = {
   graphqlResponse: 0,

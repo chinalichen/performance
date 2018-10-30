@@ -1,14 +1,13 @@
-import debug from 'debug';
+import { log } from '../utils/console';
 import WebSocket from 'ws';
 import { WSRequest, WSResponse } from './wsframe';
 import { getBookQuery } from './graphql/index.js';
 
-const log = debug('network')
-
-const ws = 'ws://localhost:9898/api/ws'
+// const ws = 'ws://localhost:9898/api/ws'
 
 export default class Client {
-  constructor(cookie) {
+  constructor(addr, cookie) {
+    this.ws = addr;
     this.cookie = cookie;
     this.socket = null;
     this.requests = {};
@@ -49,7 +48,7 @@ export default class Client {
     return new Promise((resolve) => {
       function get() {
         if (!self.socket) {
-          self.socket = new WebSocket(ws, { headers: { cookie: self.cookie } });
+          self.socket = new WebSocket(self.ws, { headers: { cookie: self.cookie } });
           self.socket.addEventListener('close', () => log('websocket connection has been closed.'));
           self.socket.addEventListener('message', self.handleMessage);
         }
@@ -66,7 +65,7 @@ export default class Client {
   }
   async sendQuery(query) {
     const socket = await this.getSocket();
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const request = new WSRequest(query, (data, errors) => {
         if (data) {
           resolve(data);
@@ -83,6 +82,6 @@ export default class Client {
   }
   async getBook(id) {
     const book = await this.sendQuery(getBookQuery(id));
-    return book;
+    return book.getBook;
   }
 }
