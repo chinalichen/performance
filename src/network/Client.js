@@ -49,8 +49,14 @@ export default class Client {
       function get() {
         if (!self.socket) {
           self.socket = new WebSocket(self.ws, { headers: { cookie: self.cookie } });
-          self.socket.addEventListener('close', () => log('websocket connection has been closed.'));
+          self.socket.addEventListener('close', (...e) => {
+            log('websocket connection has been closed.', e)
+          });
+          self.socket.addEventListener('error', (evt) => {
+            log('webocket connection has been closed cause', evt);
+          });
           self.socket.addEventListener('message', self.handleMessage);
+          self.pingHandler = setInterval(() => self.socket.ping(), 30000);
         }
         if (self.socket) {
           if (self.socket.readyState !== self.socket.OPEN) {
@@ -83,5 +89,10 @@ export default class Client {
   async getBook(id) {
     const book = await this.sendQuery(getBookQuery(id));
     return book.getBook;
+  }
+  close() {
+    if (this.pingHandler != null) {
+      clearInterval(this.pingHandler);
+    }
   }
 }

@@ -4,8 +4,8 @@ import Client from './network/Client';
 
 log('---------------------');
 
-// const localhostCookie = 'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzgyODk5ODIsInVzZXJFbWFpbCI6ImxpLmNoZW5AY29kYXNoZWV0LmNvbSIsInVzZXJJRCI6ImNlNjJkMjg1LTQ5MjgtNDlmYS1hMzQyLTA0MmFkYWU5MGMxZiIsInVzZXJOYW1lIjoibGkuY2hlbiIsInVzZXJQaG9uZU51bWJlciI6IiJ9.iKV2AgM9MOrjuig3F_rTh9p9eAEbtYccDpQNLowIBY8;';
-// const localhost = new Client('ws://localhost:9898/api/ws', localhostCookie);
+const localhostCookie = 'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzgyODk5ODIsInVzZXJFbWFpbCI6ImxpLmNoZW5AY29kYXNoZWV0LmNvbSIsInVzZXJJRCI6ImNlNjJkMjg1LTQ5MjgtNDlmYS1hMzQyLTA0MmFkYWU5MGMxZiIsInVzZXJOYW1lIjoibGkuY2hlbiIsInVzZXJQaG9uZU51bWJlciI6IiJ9.iKV2AgM9MOrjuig3F_rTh9p9eAEbtYccDpQNLowIBY8;';
+const localhost = new Client('ws://localhost:9898/api/ws', localhostCookie);
 
 const localUbuntuCookie = 'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDAyNjIxOTMsInVzZXJFbWFpbCI6ImxpLmNoZW5AY29kYXNoZWV0LmNvbSIsInVzZXJJRCI6IjA2MjQ0ZmEyLTIwNjAtNGZmYy1iOWI5LWI5MDBjMWM1ZDYwMSIsInVzZXJOYW1lIjoibGkiLCJ1c2VyUGhvbmVOdW1iZXIiOiIifQ.AuWU2uy3shqgXBZCk7l8H6C792JGMQAoGW7r2hwSSUc';
 const localUbuntu = new Client('ws://192.168.1.24/api/ws', localUbuntuCookie);
@@ -27,13 +27,18 @@ function printBookStatistic(book) {
   table({ labels, sheets, ...data });
 }
 
-let count = 1;
+let sendCount = 1;
+let recvCount = 1;
 setInterval(() => {
+  log(sendCount++, 'query a book at', new Date());
   const start = Date.now();
-  localUbuntu
-    .getBook('4981ff03-971e-43e1-b9c8-15aee034f3b8')
+  // localhost.getBook('3ef9eb19-bb7c-4a44-ade2-8bcd47cc3962') // D://localhost
+  // localhost.getBook('d38a50c1-9c42-4678-be22-f86fe62505a5') // F://localhost
+  localUbuntu.getBook('12303e55-4d82-417c-a1b2-a08f97769149') // 192.168.1.24
     .then((book) => {
-      log(count++, 'received a book, id:', book.id, ' cost', (Date.now() - start) / 1000, 's');
+      log(`${recvCount++} received a book at ${new Date()}, id: ${book.id} cost ${(Date.now() - start) / 1000}s`);
       printBookStatistic(book);
-    }).catch(e => log(e));
-}, 2000);
+    }).catch((e) => {
+      log(e)
+    });
+}, 1000);
