@@ -29,16 +29,20 @@ function printBookStatistic(book) {
 
 let sendCount = 1;
 let recvCount = 1;
+let totalCost = 0;
 setInterval(() => {
-  log(sendCount++, 'query a book at', new Date());
+  log(`${sendCount++} query a book at ${(new Date()).toJSON()}`);
   const start = Date.now();
   // localhost.getBook('3ef9eb19-bb7c-4a44-ade2-8bcd47cc3962') // D://localhost
   // localhost.getBook('d38a50c1-9c42-4678-be22-f86fe62505a5') // F://localhost
-  localUbuntu.getBook('12303e55-4d82-417c-a1b2-a08f97769149') // 192.168.1.24
+  localUbuntu.getBook('4981ff03-971e-43e1-b9c8-15aee034f3b8') // 192.168.1.24
     .then((book) => {
-      log(`${recvCount++} received a book at ${new Date()}, id: ${book.id} cost ${(Date.now() - start) / 1000}s`);
+      const cost = Date.now() - start;
+      totalCost += cost;
+      log(`${recvCount} received a book at ${(new Date()).toJSON()}, id: ${book.id} cost ${cost / 1000}s, avg:${totalCost / recvCount / 1000}s`);
+      recvCount++
       printBookStatistic(book);
     }).catch((e) => {
       log(e)
     });
-}, 1000);
+}, 2000);
