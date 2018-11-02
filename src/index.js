@@ -10,6 +10,9 @@ const localhost = new Client('ws://localhost:9898/api/ws', localhostCookie);
 const localUbuntuCookie = 'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDAyNjIxOTMsInVzZXJFbWFpbCI6ImxpLmNoZW5AY29kYXNoZWV0LmNvbSIsInVzZXJJRCI6IjA2MjQ0ZmEyLTIwNjAtNGZmYy1iOWI5LWI5MDBjMWM1ZDYwMSIsInVzZXJOYW1lIjoibGkiLCJ1c2VyUGhvbmVOdW1iZXIiOiIifQ.AuWU2uy3shqgXBZCk7l8H6C792JGMQAoGW7r2hwSSUc';
 const localUbuntu = new Client('ws://192.168.1.24/api/ws', localUbuntuCookie);
 
+const finesheetCookie = 'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzgxMTQ3MDksInVzZXJFbWFpbCI6ImxpLmNoZW5AY29kYXNoZWV0LmNvbSIsInVzZXJJRCI6IjFiN2QyMjZkLTU1ZDUtNGYxNS1hNzU0LTY0YTdlNjIzNDMyMCIsInVzZXJOYW1lIjoid2lsbGkiLCJ1c2VyUGhvbmVOdW1iZXIiOiIifQ.b_OInGNt-Wd_ffSFP-Sfw0116PWowwudsh9rmgAAwlI';
+const finesheet = new Client('ws://finesheet.com/api/ws', finesheetCookie);
+
 function printBookStatistic(book) {
   if (!book) {
     log('book is not exists');
@@ -35,7 +38,8 @@ setInterval(() => {
   const start = Date.now();
   // localhost.getBook('3ef9eb19-bb7c-4a44-ade2-8bcd47cc3962') // D://localhost
   // localhost.getBook('d38a50c1-9c42-4678-be22-f86fe62505a5') // F://localhost
-  localUbuntu.getBook('4981ff03-971e-43e1-b9c8-15aee034f3b8') // 192.168.1.24
+  // localUbuntu.getBook('4981ff03-971e-43e1-b9c8-15aee034f3b8') // 192.168.1.24
+  finesheet.getBook('8b5ada19-ceb4-4428-9f81-f86654e38518') // finesheet.com
     .then((book) => {
       const cost = Date.now() - start;
       totalCost += cost;
@@ -45,4 +49,4 @@ setInterval(() => {
     }).catch((e) => {
       log(e)
     });
-}, 2000);
+}, 1000);
